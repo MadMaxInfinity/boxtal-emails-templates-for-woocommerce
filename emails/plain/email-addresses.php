@@ -31,7 +31,7 @@ if ( $order->get_billing_email() ) {
 if ( ! wc_ship_to_billing_address_only() && $order->needs_shipping_address() ) {
 	$shipping = '';
 	// If boxtal was used, set choosen parcelpoint as shipping address
-	if ( $order->has_shipping_method( 'boxtal_connect' ) && defined( 'BOXTAL_CONNECT_VERSION' ) ) {
+	if ( $order->has_shipping_method( 'boxtal_connect' ) && is_plugin_active( "boxtal-connect/boxtal-connect.php" ) ) {
 		global $plugin;
 		$object = new Boxtal\BoxtalConnectWoocommerce\Util\Order_Util ( $plugin );
 		$parcelpoint = $object->get_parcelpoint( $order );
