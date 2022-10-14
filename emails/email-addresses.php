@@ -24,11 +24,15 @@ $address    = $order->get_formatted_billing_address();
 
 $shipping = '';
 // If boxtal was used, set choosen parcelpoint as shipping address
-if ( $order->has_shipping_method( 'boxtal_connect' ) && defined( 'BOXTAL_CONNECT_VERSION' ) ) {
-		ob_start();
-		do_action( 'boxtal_connect_print_parcelpoint', $order );
-		$shipping = ob_get_contents();
-		ob_end_clean();
+if ( $order->has_shipping_method( 'boxtal_connect' ) && is_plugin_active( "boxtal-connect/boxtal-connect.php" ) ) {
+        $object = new Boxtal\BoxtalConnectWoocommerce\Util\Order_Util ( $plugin );
+	$parcelpoint = $object->get_parcelpoint( $order );
+	if ( $parcelpoint ) {
+ 		ob_start();
+	   	include WP_PLUGIN_DIR . '/boxtal-connect/Boxtal/BoxtalConnectWoocommerce/assets/views/html-order-parcelpoint.php';
+            	$shipping = ob_get_contents();
+            	ob_end_clean();
+	}
 }
 else { // In case boxtal is deactivated, we also fallback to WC shipping adresse
 	$shipping = $order->get_formatted_shipping_address();
